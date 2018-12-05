@@ -153,7 +153,7 @@ namespace bf
          * \param path директория
          * \param is_delete_root_directory если true, удаляет корневой каталог (который первым указан в path), иначе оставляет паку
          */
-        void remove_dir(std::string path, bool is_delete_root_directory = false)
+        void remove_directory(std::string path, bool is_delete_root_directory = false)
         {
                 DIR* directory;                                    // Directory object
                 dirent* directory_name;
@@ -169,7 +169,7 @@ namespace bf
                                 std::string abs_path = path + str_directory_name;
 
                                 if(search_char == NULL) {
-                                        remove_dir(abs_path);
+                                        remove_directory(abs_path);
                                         rmdir(abs_path.c_str());
                                         continue;
                                 }

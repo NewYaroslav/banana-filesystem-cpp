@@ -21,6 +21,6 @@ int main()
         for( auto & p : list_dir ) cout << "-> " << p << endl;
 
         bf::create_directory("..//..//test//test2//test3");
-        bf::remove_dir("..\\..\\test", true);
+        bf::remove_directory("..\\..\\test", true);
         return 0;
 }

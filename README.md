@@ -91,6 +91,6 @@ bf::create_directory("..//..//test//test2//test3");
  * если параметр is_delete_root_directory true, функция удаляет также корневой каталог (который первым указан в path)
  * иначе функция оставляет паку
  */
-bf::remove_dir("..\\..\\test", true);
+bf::remove_directory("..\\..\\test", true);
 
 ```
