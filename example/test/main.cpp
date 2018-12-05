@@ -13,7 +13,7 @@ int main()
                 std::cout << list_files[i] << std::endl;
         }
 
-        string path = "C:/Users\\user/Downloads/VK audio";
+        string path = "C:/Users\\user/Downloads";
 
         std::vector<std::string> list_dir;
         bf::parse_path(path, list_dir);
