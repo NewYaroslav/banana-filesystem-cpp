@@ -22,5 +22,17 @@ int main()
 
         bf::create_directory("..//..//test//test2//test3");
         bf::remove_directory("..\\..\\test", true);
+
+        int file_size = bf::get_file_size("test.txt");
+
+        cout << "file size " << file_size << std::endl;
+
+        char *buffer = new char[file_size];
+        file_size = bf::load_file("test.txt", buffer, file_size);
+
+        cout << "file size " << file_size << std::endl;
+
+        cout << "data:\n" << buffer << std::endl;
+
         return 0;
 }

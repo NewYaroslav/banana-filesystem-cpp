@@ -94,3 +94,26 @@ bf::create_directory("..//..//test//test2//test3");
 bf::remove_directory("..\\..\\test", true);
 
 ```
+
+* Получить размер файла
+
+```C++
+
+int file_size = bf::get_file_size("test.txt");
+if(file_size >= 0) {
+	// файл существует и его размер получен
+}
+
+```
+
+* Читать файл целиком в std::string
+
+```C++
+
+std::string file_data;
+int file_size = bf::load_file("test.txt", file_data);
+if(file_size >= 0) {
+	// файл существует и его размер получен
+}
+
+```

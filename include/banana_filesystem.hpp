@@ -188,6 +188,61 @@ namespace bf
                 if(is_delete_root_directory)
                         rmdir(path.c_str());
         }
+//------------------------------------------------------------------------------
+        /** \brief Получить размер файла
+         * \param file_name имя файла
+         * \return размер файла, вернет -1 если файл не удалось открыть
+         */
+        int get_file_size(std::string file_name)
+        {
+                std::ifstream file;
+                file.open(file_name);
+                if(!file)
+                        return -1;
+                file.seekg(0, std::ios::end);
+                int file_size = file.tellg();
+                file.close();
+                return file_size;
+        }
+//------------------------------------------------------------------------------
+        /** \brief Загрузить файл целиком в std::string
+         * \param file_name имя файла
+         * \param file_data данные файла
+         * \return размер файла, вернет -1 если файл не удалось открыть
+         */
+        int load_file(std::string file_name, std::string &file_data)
+        {
+                std::ifstream file(file_name, std::ios_base::binary);
+                if(!file)
+                        return -1;
+                file.seekg(0, std::ios_base::end);
+                std::ifstream::pos_type file_size = file.tellg();
+                file.seekg(0);
+                file_data.reserve(file_size);
+                file.read((char*)file_data.data(), file_size);
+                return file_data.size();
+        }
+//------------------------------------------------------------------------------
+        /** \brief Загрузить файл целиком в std::string
+         * \param file_name имя файла
+         * \param file_data данные файла
+         * \param buffer_size размер буфера
+         * \param start_buffer_pos начало записи в буфер
+         * \return размер файла, вернет -1 если файл не удалось открыть
+         */
+        int load_file(std::string file_name, char *file_data, size_t buffer_size, size_t start_buffer_pos = 0)
+        {
+                std::ifstream file(file_name, std::ios_base::binary);
+                if(!file)
+                        return -1;
+                file.seekg(0, std::ios_base::end);
+                std::ifstream::pos_type file_size = file.tellg();
+                file.seekg(0);
+                if(file_size > buffer_size - start_buffer_pos)
+                        return -1;
+                file.read(file_data + start_buffer_pos, file_size);
+                return file_size;
+        }
 }
 
 #endif // BANANA_FILESYSTEM_HPP_INCLUDED
