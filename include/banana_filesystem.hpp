@@ -230,7 +230,7 @@ namespace bf
          * \param start_buffer_pos начало записи в буфер
          * \return размер файла, вернет -1 если файл не удалось открыть
          */
-        int load_file(std::string file_name, char *file_data, size_t buffer_size, size_t start_buffer_pos = 0)
+        int load_file(std::string file_name, void *file_data, size_t buffer_size, size_t start_buffer_pos = 0)
         {
                 std::ifstream file(file_name, std::ios_base::binary);
                 if(!file)
@@ -240,7 +240,7 @@ namespace bf
                 file.seekg(0);
                 if(file_size > buffer_size - start_buffer_pos)
                         return -1;
-                file.read(file_data + start_buffer_pos, file_size);
+                file.read((char*)file_data + start_buffer_pos, file_size);
                 return file_size;
         }
 }
