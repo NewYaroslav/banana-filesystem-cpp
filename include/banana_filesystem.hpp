@@ -225,12 +225,12 @@ namespace bf
 //------------------------------------------------------------------------------
         /** \brief Загрузить файл целиком в std::string
          * \param file_name имя файла
-         * \param file_data данные файла
+         * \param buffer данные файла
          * \param buffer_size размер буфера
          * \param start_buffer_pos начало записи в буфер
          * \return размер файла, вернет -1 если файл не удалось открыть
          */
-        int load_file(std::string file_name, void *file_data, size_t buffer_size, size_t start_buffer_pos = 0)
+        int load_file(std::string file_name, void *buffer, size_t buffer_size, size_t start_buffer_pos = 0)
         {
                 std::ifstream file(file_name, std::ios_base::binary);
                 if(!file)
@@ -240,9 +240,26 @@ namespace bf
                 file.seekg(0);
                 if(file_size > buffer_size - start_buffer_pos)
                         return -1;
-                file.read((char*)file_data + start_buffer_pos, file_size);
+                file.read((char*)buffer + start_buffer_pos, file_size);
                 return file_size;
         }
+//------------------------------------------------------------------------------
+        /** \brief Записать файл целиком из буфера
+         * \param file_name имя файла
+         * \param buffer буфер
+         * \param buffer_size размер буфера
+         * \return размер файла, вернет -1 если файл не удалось записать
+         */
+        int write_file(std::string file_name, void *buffer, size_t buffer_size)
+        {
+                std::ofstream file(file_name, std::ios_base::binary);
+                if(!file)
+                        return -1;
+                file.write((char*)buffer, buffer_size);
+                file.close();
+                return buffer_size;
+        }
+//------------------------------------------------------------------------------
 }
 
 #endif // BANANA_FILESYSTEM_HPP_INCLUDED
