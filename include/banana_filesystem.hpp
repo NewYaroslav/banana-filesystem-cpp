@@ -69,10 +69,10 @@ namespace bf
 
                 if(path.back() != '/' && path.back() != '\\')
                         path += "/";
-                if(directory = opendir(path.c_str())) {
+                if((directory = opendir(path.c_str()))) {
                         // открываем директорию
-                        while(directory_name = readdir(directory)) {
-                                unsigned long str_len = strlen(directory_name->d_name);
+                        while((directory_name = readdir(directory))) {
+                                //unsigned long str_len = strlen(directory_name->d_name);
                                 char * search_char = (char*) memchr(directory_name->d_name, '.', strlen(directory_name->d_name));
                                 std::string str_directory_name = std::string(directory_name->d_name);
                                 if(search_char == NULL) {
@@ -129,7 +129,7 @@ namespace bf
                 std::vector<std::string> dir_list;
                 parse_path(path, dir_list);
                 std::string name;
-                for(int i = 0; i < dir_list.size(); i++) {
+                for(size_t i = 0; i < dir_list.size(); i++) {
                         name += dir_list[i] + "\\";
                         if(dir_list[i] == "..")
                                 continue;
@@ -159,10 +159,10 @@ namespace bf
                 dirent* directory_name;
                 if(path.back() != '/' && path.back() != '\\')
                         path += "/";
-                if(directory = opendir(path.c_str())) {
+                if((directory = opendir(path.c_str()))) {
                         // открываем директорию
-                        while(directory_name = readdir(directory)) {
-                                unsigned long str_len = strlen(directory_name->d_name);
+                        while((directory_name = readdir(directory))) {
+                                //unsigned long str_len = strlen(directory_name->d_name);
                                 char * search_char = (char*) memchr(directory_name->d_name, '.', strlen(directory_name->d_name));
 
                                 std::string str_directory_name = std::string(directory_name->d_name);
@@ -178,7 +178,7 @@ namespace bf
                                         continue;
 
                                 FILE *file = NULL;
-                                if(file = fopen(abs_path.c_str(), "r")) {
+                                if((file = fopen(abs_path.c_str(), "r"))) {
                                         fclose(file);
                                         remove(abs_path.c_str());
                                 }
@@ -238,7 +238,7 @@ namespace bf
                 file.seekg(0, std::ios_base::end);
                 std::ifstream::pos_type file_size = file.tellg();
                 file.seekg(0);
-                if(file_size > buffer_size - start_buffer_pos)
+                if((size_t)file_size > (buffer_size - start_buffer_pos))
                         return -1;
                 file.read((char*)buffer + start_buffer_pos, file_size);
                 return file_size;
