@@ -133,7 +133,6 @@ namespace bf
                         name += dir_list[i] + "\\";
                         if(dir_list[i] == "..")
                                 continue;
-                        std::cout << name << std::endl;
                         mkdir(name.c_str());
                 }
         }
