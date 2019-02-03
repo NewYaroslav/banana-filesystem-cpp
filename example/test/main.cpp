@@ -27,7 +27,8 @@ int main()
 
         cout << "file size " << file_size << std::endl;
 
-        char *buffer = new char[file_size];
+        char *buffer = new char[file_size + 1];
+        memset(buffer,0,file_size + 1);
         file_size = bf::load_file("test.txt", buffer, file_size);
 
         cout << "file size " << file_size << std::endl;

@@ -216,9 +216,12 @@ namespace bf
                         return -1;
                 file.seekg(0, std::ios_base::end);
                 std::ifstream::pos_type file_size = file.tellg();
+                std::cout << file_size << std::endl;
                 file.seekg(0);
                 file_data.reserve(file_size);
-                file.read((char*)file_data.data(), file_size);
+                char temp;
+                while(file.read((char*)&temp, sizeof(char))) file_data.push_back(temp);
+                file.close();
                 return file_data.size();
         }
 //------------------------------------------------------------------------------
