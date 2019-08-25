@@ -75,6 +75,18 @@ for( auto & p : list_dir ) cout << "-> " << p << endl;
 
 ```
 
+* Получить расширение файла и установить новое расширение
+
+```C++
+
+string path = "C:/Users\\user/Downloads\\test.dat";
+// На экран выведет .dat
+std::cout << "file extension (for path): " << bf::get_file_extension(path) << endl;
+// На экран выведет C:/Users/user/Downloads/test.test
+std::cout << "set file extension (for path): " << bf::set_file_extension(path, ".test") << endl;
+
+```
+
 * Создать директорию
 
 ```C++

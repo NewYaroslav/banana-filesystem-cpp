@@ -38,7 +38,7 @@ namespace bf
          * \param file_name имя файла
          * \return вернет true если файл есть
          */
-        bool check_file(std::string file_name) {
+        bool check_file(const std::string file_name) {
                 std::ifstream file;
                 file.open(file_name);
                 if(!file) return false;
@@ -60,8 +60,8 @@ namespace bf
 
         unsigned long get_list_files(std::string path,
                                      std::vector<std::string> &output_list,
-                                     bool is_with_directory = true,
-                                     bool is_folders_only = false)
+                                     const bool is_with_directory = true,
+                                     const bool is_folders_only = false)
         {
                 DIR* directory;                                    // Directory object
                 dirent* directory_name;
@@ -101,7 +101,7 @@ namespace bf
 //------------------------------------------------------------------------------
         /** \brief Разобрать путь на составляющие
          * Данная функция парсит путь, например C:/Users\\user/Downloads разложит на
-         * C: Users user и Downloads
+         * C:, Users, user и Downloads
          * \param path путь, который надо распарсить
          * \param output_list список полученных элементов
          */
@@ -119,6 +119,43 @@ namespace bf
                                 start_pos = found_beg + 1;
                         } else break;
                 }
+        }
+//------------------------------------------------------------------------------
+        /** \brief Получить расширение файла
+         * \param path Путь к файлу
+         * \return Вернет расширение файла или пустую строку, если расширение отсутствует
+         */
+        std::string get_file_extension(const std::string path) {
+                if(path.size() == 0) return "";
+                std::vector<std::string> elemet_list;
+                parse_path(path, elemet_list);
+                std::string file_name = elemet_list.back();
+                std::size_t found_point = file_name.find_last_of(".");
+                if(found_point == std::string::npos) return "";
+                return file_name.substr(found_point);
+        }
+//------------------------------------------------------------------------------
+        /** \brief Установить или изменить расширение файла
+         * \param path Путь к файлу
+         * \param file_extension новое расширение файла
+         * \param separator Символ разделителя
+         * \return Вернет имя файла с указанным расширением
+         */
+        std::string set_file_extension(const std::string path, const std::string file_extension, const std::string separator = "/") {
+                if(path.size() == 0) return (path + file_extension);
+                std::vector<std::string> elemet_list;
+                parse_path(path, elemet_list);
+                std::string file_name = elemet_list.back();
+                std::size_t found_point = file_name.find_last_of(".");
+                if(found_point == std::string::npos) return (path + file_extension);
+                std::string _file_extension = file_name.substr(found_point);
+                std::string _file_name = file_name.substr(0, found_point);
+                std::string new_path;
+                for(size_t i = 0; i < elemet_list.size() - 1; ++i) {
+                        new_path += elemet_list[i] + separator;
+                }
+                new_path += _file_name + file_extension;
+                return new_path;
         }
 //------------------------------------------------------------------------------
         /** \brief Создать директорию
