@@ -67,8 +67,7 @@ namespace bf
                 dirent* directory_name;
                 unsigned long num_files = 0;
 
-                if(path.back() != '/' && path.back() != '\\')
-                        path += "/";
+                if(path.back() != '/' && path.back() != '\\') path += "/";
                 if((directory = opendir(path.c_str()))) {
                         // открываем директорию
                         while((directory_name = readdir(directory))) {
@@ -107,15 +106,21 @@ namespace bf
          */
         void parse_path(std::string path, std::vector<std::string> &output_list)
         {
-                if(path.back() != '/' && path.back() != '\\')
-                        path += "/";
+                if(path.back() != '/' && path.back() != '\\') path += "/";
                 std::size_t start_pos = 0;
                 while(true) {
-                        std::size_t found_beg = path.find_first_of("/\\", start_pos);
+                        std::size_t found_beg = path.find_first_of("/\\~", start_pos);
                         if(found_beg != std::string::npos) {
                                 std::size_t len = found_beg - start_pos;
-                                if(len > 0)
-                                        output_list.push_back(path.substr(start_pos, len));
+                                if(len > 0) {
+                                    if(output_list.size() == 0 && path.size() > 3 && path.substr(0, 2) == "~/") {
+                                        output_list.push_back(path.substr(0, 2));
+                                    } else
+                                    if(output_list.size() == 0 && path.size() > 2 && path.substr(0, 1) == "/") {
+                                        output_list.push_back(path.substr(0, 1));
+                                    }
+                                    output_list.push_back(path.substr(start_pos, len));
+                                }
                                 start_pos = found_beg + 1;
                         } else break;
                 }
@@ -152,7 +157,8 @@ namespace bf
                 std::string _file_name = file_name.substr(0, found_point);
                 std::string new_path;
                 for(size_t i = 0; i < elemet_list.size() - 1; ++i) {
-                        new_path += elemet_list[i] + separator;
+                        if(elemet_list[i] != "/" && elemet_list[i] != "~/") new_path += elemet_list[i] + separator;
+                        else new_path += elemet_list[i];
                 }
                 new_path += _file_name + file_extension;
                 return new_path;
@@ -167,9 +173,15 @@ namespace bf
                 parse_path(path, dir_list);
                 std::string name;
                 for(size_t i = 0; i < dir_list.size(); i++) {
-                        name += dir_list[i] + "\\";
-                        if(dir_list[i] == "..")
-                                continue;
+                        if(i > 0) name += dir_list[i] + "/";
+                        else if(i == 0 &&
+                            (dir_list[i] == "/" ||
+                            dir_list[i] == "~/")) {
+                            name += dir_list[i];
+                        } else name += dir_list[i] + "/";
+                        if(dir_list[i] == ".." ||
+                            dir_list[i] == "/" ||
+                            dir_list[i] == "~/") continue;
                         mkdir(name.c_str());
                 }
         }
@@ -193,8 +205,7 @@ namespace bf
         {
                 DIR* directory;                                    // Directory object
                 dirent* directory_name;
-                if(path.back() != '/' && path.back() != '\\')
-                        path += "/";
+                if(path.back() != '/' && path.back() != '\\') path += "/";
                 if((directory = opendir(path.c_str()))) {
                         // открываем директорию
                         while((directory_name = readdir(directory))) {
