@@ -4,6 +4,18 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    string path0 = "C:/Users\\user/Downloads\\test-name.dat";
+    std::cout << "file name (for path): " << bf::get_file_name(path0) << endl;
+
+#   if defined(__MINGW32__) || defined(_WIN32)
+    std::vector<std::string> list_disk = bf::get_list_disk();
+    for(size_t i = 0; i < list_disk.size(); ++i) {
+        std::cout << list_disk[i] << std::endl;
+    }
+
+    std::system("pause");
+#   endif
+
     std::cout << "current work dir: " << bf::get_current_work_dir() << endl;
     std::vector<std::string> list_files;
     bf::get_list_files("..//..//", list_files, true, true);

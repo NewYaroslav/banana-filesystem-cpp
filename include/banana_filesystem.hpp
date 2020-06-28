@@ -31,7 +31,12 @@
 #include <dirent.h>
 #include <dir.h>
 
+#if defined(__MINGW32__) || defined(_WIN32)
+#include <windows.h>
+#endif
+
 namespace bf {
+
     /** \brief Проверить наличие файла
      * \param file_name имя файла
      * \return вернет true если файл есть
@@ -43,6 +48,25 @@ namespace bf {
         file.close();
         return true;
     }
+
+#   if defined(__MINGW32__) || defined(_WIN32)
+    /** \brief Получить список жестких дисков
+     * \return Список жестких дисков
+     */
+    std::vector<std::string> get_list_disk() {
+        std::vector<std::string> temp;
+        char buf[26];
+        GetLogicalDriveStringsA(sizeof(buf),buf);
+        //char *DRF [] = {"Unknown" , "Invalid path",
+        //    "Removable", "Fixed" , "Network drive","CD-ROM", "RAM disk"};
+        for(char *s=buf; *s; s+=strlen(s)+1) {
+            if(GetDriveTypeA(s) == 3) {
+                temp.push_back(std::string(s));
+            }
+        }
+        return temp;
+    }
+#   endif
 
     /** \brief Получить список файлов
      * \param path путь, с которого начинается поиск
@@ -120,13 +144,24 @@ namespace bf {
      * \return Вернет расширение файла или пустую строку, если расширение отсутствует
      */
     std::string get_file_extension(const std::string path) {
-        if(path.size() == 0) return "";
+        if(path.size() == 0) return std::string();
         std::vector<std::string> elemet_list;
         parse_path(path, elemet_list);
         std::string file_name = elemet_list.back();
         std::size_t found_point = file_name.find_last_of(".");
-        if(found_point == std::string::npos) return "";
+        if(found_point == std::string::npos) return std::string();
         return file_name.substr(found_point);
+    }
+
+    /** \brief Получить имя файла
+     * \param path Путь к файлу
+     * \return Вернет имя файла или пустую строку в случае ошибки
+     */
+    std::string get_file_name(const std::string path) {
+        if(path.size() == 0) return std::string();
+        std::vector<std::string> elemet_list;
+        parse_path(path, elemet_list);
+        return elemet_list.back();
     }
 
     /** \brief Установить или изменить расширение файла
